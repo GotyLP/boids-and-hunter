@@ -5,21 +5,29 @@ using UnityEngine;
 public class ActionNode : Node
 {
     public TypeAction typeAction;
+    private BoidMovement movement;
+    private BoidFlocking flocking;
+
     public override void Execute(Boid boid)
     {
         switch (typeAction)
         {
             case TypeAction.Arrive:
-                Debug.Log("Comer");
+                Debug.Log("Executed ActionNode Arrive");
+
                 break;
             case TypeAction.Evade:
-                Debug.Log("Evadir");
+                Debug.Log("Executed ActionNode Evade");
                 break;
             case TypeAction.Flocking:
-                Debug.Log("Walk with my homies");
+                Debug.Log("Executed ActionNode Flocking");
+                flocking = boid.GetComponent<BoidFlocking>();
+                flocking.ApplyFlocking();
                 break;
             case TypeAction.MoveRandom:
-                Debug.Log("Walk alone with the voices");
+                Debug.Log("Executed ActionNode MoveRandom");
+                movement = boid.GetComponent<BoidMovement>();
+                movement.ApplyMovement();
                 break;
             default:
                 break;

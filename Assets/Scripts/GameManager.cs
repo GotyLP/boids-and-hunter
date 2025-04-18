@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
    public static GameManager Instance;
    public List<Boid> totalBoids = new List<Boid>();
+   public List<Food> totalFood = new List<Food>();
+   public Hunter hunter;
+
 
     [Range(0f, 1f)]public float wightSeparation;
     [Range(0f, 1f)]public float wightCohesion;

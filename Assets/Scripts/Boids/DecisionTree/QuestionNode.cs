@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,25 +9,29 @@ public class QuestionNode : Node
     public TypeQuestion question;
     public Node trueNode;
     public Node falseNode;
+    private BoidPerception perception;
+
     public override void Execute(Boid boid)
     {
         switch (question)
         {
             case TypeQuestion.FoodDist:
-                //if (Vector3.Distance(boid.transform.position, ComidaPosition) <= boid.ComidaDetection)
-                if (true)
+                perception = boid.GetComponent<BoidPerception>();
+                if (perception.IsFoodNear())
                     trueNode.Execute(boid);
                 else
                     falseNode.Execute(boid);
                 break;
             case TypeQuestion.HunterDist:
-                if (true)
+                perception = boid.GetComponent<BoidPerception>();
+                if (perception.IsHunterNear())
                     trueNode.Execute(boid);
                 else
                     falseNode.Execute(boid);
                 break;
             case TypeQuestion.BoidPartnerDist:
-                if (true)
+                perception = boid.GetComponent<BoidPerception>();
+                if (perception.IsBoidNear())
                     trueNode.Execute(boid);
                 else
                     falseNode.Execute(boid);
