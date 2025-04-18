@@ -10,9 +10,9 @@ public class GameManager : MonoBehaviour
    public Hunter hunter;
 
 
-    [Range(0f, 1f)]public float wightSeparation;
-    [Range(0f, 1f)]public float wightCohesion;
-    [Range(0f, 1f)]public float wightAligment;
+    [Range(0f, 1f)]public float weightSeparation;
+    [Range(0f, 1f)]public float weightCohesion;
+    [Range(0f, 1f)]public float weightAligment;
 
     private void Awake()
     {

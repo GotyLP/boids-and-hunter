@@ -243,7 +243,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 94cc8a2ba736a49499233c35c9c1ee32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -311,6 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c93bbaf0711844885dab68f8a488f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxForce: 3
 --- !u!114 &6885099012447499429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,8 +324,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f113d505290e9e4183704afe963a26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxVelocity: 5
-  _maxSpeed: 2
+  _maxVelocity: 3
+  _maxSpeed: 3
+  _prediction: 3
+  _radiusArrive: 4
+  _rayDistance: 3
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &1097875189718414796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,10 +344,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fbbb3e16ec6e004cb58c11adca5e477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radiusAlign: 3
+  _radiusAlign: 5
   _radiusSeparation: 1
   _radiusFoodDetection: 3
-  _radiusHunterDetection: 3
+  _radiusTryEatFoot: 2
+  _radiusHunterDetection: 5
 --- !u!114 &5264050611609675551
 MonoBehaviour:
   m_ObjectHideFlags: 0

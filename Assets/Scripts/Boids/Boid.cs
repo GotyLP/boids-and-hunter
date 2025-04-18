@@ -20,7 +20,6 @@ public class Boid : MonoBehaviour
     void Update()
     {
         firstNode.Execute(this);
-        _movement.ApplyMovement();
     }
 
     public void AddForce(Vector3 force)

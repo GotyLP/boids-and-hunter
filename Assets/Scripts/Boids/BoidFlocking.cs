@@ -22,55 +22,99 @@ public class BoidFlocking : MonoBehaviour
     {
         Debug.Log("Boid ejecuta flocking");
 
-        var alignforce = Aligment() * GameManager.Instance.wightAligment;
-        var cohesionforce = Cohesion() * GameManager.Instance.wightCohesion;
-        var separationforce = Separation() * GameManager.Instance.wightSeparation;
+        var alignforce = Aligment(GameManager.Instance.totalBoids, _perception.AlignRadius) * GameManager.Instance.weightAligment;
+        var cohesionforce = Cohesion(GameManager.Instance.totalBoids, _perception.AlignRadius) * GameManager.Instance.weightCohesion;
+        var separationforce = Separation(GameManager.Instance.totalBoids,_perception.SeparationRadius) * GameManager.Instance.weightSeparation;
 
-        Vector3 force = separationforce + alignforce + cohesionforce;
+        _boid.AddForce(alignforce);
+        _boid.AddForce(cohesionforce);
+        _boid.AddForce(separationforce);
 
-        force = Vector3.ClampMagnitude(force, _maxForce);
-
-
-        _boid.AddForce(alignforce + cohesionforce + separationforce);
-        //_boid.AddForce(Cohesion() * GameManager.Instance.wightCohesion);
-        //_boid.AddForce(Separation() * GameManager.Instance.wightSeparation);
-        //_boid.AddForce(Aligment() * GameManager.Instance.wightAligment);
     }
 
-    private Vector3 Aligment()
+
+    public Vector3 Separation(List<Boid> boids, float radius)
     {
         Vector3 desired = Vector3.zero;
-        var neighbors = _perception.GetBoidsInRadius(_perception.AlignRadius);
 
-        foreach (var b in neighbors)
-            desired += b.GetVelocity();
+        foreach (Boid boid in boids)
+        {
+            var dir = boid.transform.position - transform.position;
+            if (dir.magnitude > radius || boid == this) continue;
 
-        return _movement.CalculateSteering(desired);
+            desired -= dir;
+        }
+
+        if (desired == Vector3.zero) return desired;
+
+        desired.Normalize();
+        desired *= _movement.MaxVelocity;
+
+        var steering = desired - _movement.Velocity;
+        steering = Vector3.ClampMagnitude(steering, _movement.MaxSpeed);
+
+        return steering;
     }
 
-    private Vector3 Cohesion()
+
+    public Vector3 Aligment(List<Boid> boids, float radius)
     {
         Vector3 desired = Vector3.zero;
-        var neighbors = _perception.GetBoidsInRadius(_perception.AlignRadius);
+        int count = 0;
 
-        foreach (var b in neighbors)
-            desired += b.transform.position;
+        foreach (Boid boid in boids)
+        {
+            if (boid == _boid) continue;
 
-        if (neighbors.Count > 0)
-            desired = (desired / neighbors.Count) - transform.position;
+            if (Vector3.Distance(transform.position, boid.transform.position) <= radius)
+            {
+                desired += boid.GetVelocity();
+                count++;
+            }
 
-        return _movement.CalculateSteering(desired);
+        }
+
+        if (count <= 0) return desired;
+
+        desired /= count;
+        desired.Normalize();
+        desired *= _movement.MaxVelocity;
+
+        var steering = desired - _movement.Velocity;
+        steering = Vector3.ClampMagnitude(steering, _movement.MaxSpeed);
+
+        return steering;
     }
 
-    private Vector3 Separation()
+    public Vector3 Cohesion(List<Boid> boids, float radius)
     {
         Vector3 desired = Vector3.zero;
-        var neighbors = _perception.GetBoidsInRadius(_perception.SeparationRadius);
+        int count = 0;
 
-        foreach (var b in neighbors)
-            desired -= (b.transform.position - transform.position);
+        foreach (Boid boid in boids)
+        {
+            if (boid == _boid) continue;
 
-        return _movement.CalculateSteering(desired);
+            if (Vector3.Distance(transform.position, boid.transform.position) <= radius)
+            {
+                desired += boid.transform.position;
+                count++;
+            }
+
+        }
+
+        if (count <= 0) return desired;
+
+        desired /= count;
+        desired -= transform.position;
+
+        desired.Normalize();
+        desired *= _movement.MaxVelocity;
+
+        var steering = desired - _movement.Velocity;
+        steering = Vector3.ClampMagnitude(steering, _movement.MaxSpeed);
+
+        return steering;
     }
 }
 

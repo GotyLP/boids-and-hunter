@@ -7,7 +7,21 @@ public class BoidPerception : MonoBehaviour
     [SerializeField] float _radiusAlign;
     [SerializeField] float _radiusSeparation;
     [SerializeField] float _radiusFoodDetection;
+    [SerializeField] float _radiusTryEatFoot;
     [SerializeField] float _radiusHunterDetection;
+
+
+    private Vector3 _mostNearbyFood;
+    private Vector3 _hunterPosition;
+    private Vector3 _hunterVelocity;
+
+
+    public float AlignRadius => _radiusAlign;
+    public float SeparationRadius => _radiusSeparation;
+    public Vector3 MostNearbyFood => _mostNearbyFood;
+    public Vector3 HunterPosition => _hunterPosition;
+    public Vector3 HunterVelocity => _hunterVelocity;
+
     public List<Boid> GetBoidsInRadius(float radius)
     {
         var allBoids = GameManager.Instance.totalBoids;
@@ -60,30 +74,55 @@ public class BoidPerception : MonoBehaviour
         var hunter = GameManager.Instance.hunter;
 
         if (Vector3.Distance(transform.position, hunter.transform.position) <= _radiusHunterDetection)
-        { 
-            return true; 
-        } else
         {
+            _hunterPosition = hunter.transform.position;
+            _hunterVelocity = hunter.Velocity;
+            return true;
+        }
+        else
+        {
+            _hunterPosition = Vector3.zero;
+            _hunterVelocity = Vector3.zero;
             return false;
         }
-           
     }
 
     public bool IsFoodNear()
     {
         var allFood = GameManager.Instance.totalFood;
+        float minDist = float.MaxValue;
+        bool found = false;
 
         foreach (var food in allFood)
         {
             if (food == GetComponent<Food>()) continue;
-            if (Vector3.Distance(transform.position, food.transform.position) <= _radiusFoodDetection)
-                return true;
+
+            float distance = Vector3.Distance(transform.position, food.transform.position);
+            if (distance <= _radiusFoodDetection && distance < minDist)
+            {
+                minDist = distance;
+                _mostNearbyFood = food.transform.position;
+                found = true;
+            }
         }
 
-        return false;
+        return found;
     }
 
-    public float AlignRadius => _radiusAlign;
-    public float SeparationRadius => _radiusSeparation;
+    public void TryConsumeNearbyFood()
+    {
+        var allFood = GameManager.Instance.totalFood;
+
+        foreach (var food in allFood)
+        {
+            if (Vector3.Distance(transform.position, food.transform.position) < _radiusTryEatFoot)
+            {
+                food.gameObject.SetActive(false);
+                allFood.Remove(food);
+                break;
+            }
+        }
+    }
+
 }
 
