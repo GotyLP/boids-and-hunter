@@ -41,7 +41,7 @@ public class BoidFlocking : MonoBehaviour
         {
             var dir = boid.transform.position - transform.position;
             if (dir.magnitude > radius || boid == this) continue;
-
+            dir.y = 0f;
             desired -= dir;
         }
 
@@ -77,6 +77,7 @@ public class BoidFlocking : MonoBehaviour
         if (count <= 0) return desired;
 
         desired /= count;
+        desired.y = 0f;
         desired.Normalize();
         desired *= _movement.MaxVelocity;
 
@@ -107,7 +108,7 @@ public class BoidFlocking : MonoBehaviour
 
         desired /= count;
         desired -= transform.position;
-
+        desired.y = 0f;
         desired.Normalize();
         desired *= _movement.MaxVelocity;
 

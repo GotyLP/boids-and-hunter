@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c93bbaf0711844885dab68f8a488f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxForce: 3
+  _maxForce: 5
 --- !u!114 &6885099012447499429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,11 +325,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f113d505290e9e4183704afe963a26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxVelocity: 3
-  _maxSpeed: 3
-  _prediction: 3
-  _radiusArrive: 4
-  _rayDistance: 3
+  _maxVelocity: 5
+  _maxSpeed: 5
+  _prediction: 4
+  _radiusArrive: 5
+  _rayDistance: 2
   _wallLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -347,9 +347,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _radiusAlign: 5
   _radiusSeparation: 1
-  _radiusFoodDetection: 3
-  _radiusTryEatFoot: 2
-  _radiusHunterDetection: 5
+  _radiusFoodDetection: 5
+  _radiusTryEatFood: 3
+  _radiusHunterDetection: 10
 --- !u!114 &5264050611609675551
 MonoBehaviour:
   m_ObjectHideFlags: 0

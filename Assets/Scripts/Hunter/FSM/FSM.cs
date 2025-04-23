@@ -7,6 +7,9 @@ public class FSM<T>
 
     IState _currentState;
 
+    private T _currentKey;
+    public T CurrentStateKey => _currentKey;
+
     public void AddState(T newState, IState state)
     {
         if (_states.ContainsKey(newState)) return;
@@ -30,6 +33,7 @@ public class FSM<T>
             _currentState.OnExit();
 
         _currentState = _states[newState];
+        _currentKey = newState;
         _currentState.OnEnter();
     }
 }

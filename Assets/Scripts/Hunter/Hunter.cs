@@ -8,6 +8,7 @@ public class Hunter : MonoBehaviour
     [SerializeField] float _speedMov;
     [SerializeField] float _speedReg;
     [SerializeField] float _energy;
+    [SerializeField] float _maxEnergy;
     FSM<string> _fsm;
     [SerializeField] Vector3 _velocity;
     [SerializeField] float _maxVelocity;
@@ -36,7 +37,7 @@ public class Hunter : MonoBehaviour
              _fsm,
              () => _energy,
              (value) => _energy = value,
-             _energy,
+             _maxEnergy,
              _speedReg
          ));
         _fsm.AddState(HunterStatesNames.Movement, new MovementState(
@@ -56,7 +57,9 @@ public class Hunter : MonoBehaviour
             _radiusAttack,
             (boid) => Pursuit(boid), 
             (force) => AddForce(force),
-            (boid) => ShootAtBoid(boid)
+            (boid) => ShootAtBoid(boid),
+            () => _energy,
+            (value) => _energy = value
             )
         );
 
@@ -65,7 +68,9 @@ public class Hunter : MonoBehaviour
 
     private void Update()
     {
-        _fsm.ArtificialUpdate();   
+        _fsm.ArtificialUpdate();
+
+        if (_fsm.CurrentStateKey == HunterStatesNames.Idle) return;
         transform.position += _velocity * Time.deltaTime;
     }
 

@@ -16,8 +16,20 @@ public class HuntingState : IState
     private Func<Boid, Vector3> _pursuitFunc;
     private Action<Vector3> _addForceFunc;
     private Action<Boid> _attackFunc;
+    private Func<float> _getEnergy;
+    private Action<float> _setEnergy;
 
-    public HuntingState(FSM<string> fsm, Transform transform, float radiusPersuit, float radiusAttack, Func<Boid, Vector3> Persuit, Action<Vector3> addForce, Action<Boid> attackFunc)
+    public HuntingState(
+        FSM<string> fsm, 
+        Transform transform, 
+        float radiusPersuit, 
+        float radiusAttack, 
+        Func<Boid, Vector3> Persuit, 
+        Action<Vector3> addForce, 
+        Action<Boid> attackFunc,
+        Func<float> getEnergy,
+        Action<float> setEnergy
+        )
     {
         _fsm = fsm;
         _transform = transform;
@@ -26,6 +38,8 @@ public class HuntingState : IState
         _pursuitFunc = Persuit;
         _addForceFunc = addForce;
         _attackFunc = attackFunc;
+        _getEnergy = getEnergy;
+        _setEnergy = setEnergy;
 
     }
     public void OnEnter()
@@ -73,6 +87,13 @@ public class HuntingState : IState
     public void OnUpdate()
     {
         Debug.Log("On Update HuntingState");
+        float currentEnergy = _getEnergy();
+        currentEnergy -= Time.deltaTime;
+        _setEnergy(currentEnergy);
+
+        if (currentEnergy <= 0)
+            _fsm?.ChangeState(HunterStatesNames.Idle);
+
         if (_currentTarget != null)
         {
             float dist = Vector3.Distance(_currentTarget.transform.position, _transform.position);

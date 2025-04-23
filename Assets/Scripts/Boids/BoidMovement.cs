@@ -9,10 +9,8 @@ public class BoidMovement : MonoBehaviour
     [SerializeField] float _maxSpeed;
     [SerializeField] float _prediction;
     [SerializeField] float _radiusArrive;
-    [SerializeField] float _rayDistance = 2f;
+    [SerializeField] float _rayDistance;
     [SerializeField] LayerMask _wallLayer;
-
-    private BoidPerception _perception;
     public Vector3 Velocity { get; private set; }
     public float MaxVelocity => _maxVelocity;
     public float MaxSpeed => _maxSpeed;
@@ -20,7 +18,6 @@ public class BoidMovement : MonoBehaviour
     private void Start()
     {
         ApplyRandomForce();
-        _perception = this.GetComponent<BoidPerception>();
     }
 
     private void Update()
@@ -38,13 +35,25 @@ public class BoidMovement : MonoBehaviour
 
     public void AddForce(Vector3 dir)
     {
-        Velocity = Vector3.ClampMagnitude(Velocity + dir, _maxVelocity);
+        Vector3 desiredVelocity = Vector3.ClampMagnitude(Velocity + dir, _maxVelocity);
+        Velocity = Vector3.Lerp(Velocity, desiredVelocity, Time.deltaTime * 5f);
+
+        if (Velocity.sqrMagnitude > 0.01f)
+        {
+            Vector3 direction = new Vector3(Velocity.x, 0, Velocity.z);
+            if (direction.sqrMagnitude > 0.01f)
+                transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
     public void ApplyMovement()
     {
         if (Velocity != Vector3.zero)
-            transform.forward = Velocity;
+        {
+            Vector3 flatVel = new Vector3(Velocity.x, 0, Velocity.z);
+            if (flatVel.sqrMagnitude > 0.01f)
+                transform.rotation = Quaternion.LookRotation(flatVel);
+        }
 
         transform.position += Velocity * Time.deltaTime;
     }
@@ -68,6 +77,7 @@ public class BoidMovement : MonoBehaviour
     public Vector3 Seek(Vector3 target)
     {
         var desired = target - transform.position;
+        desired.y = 0f;
         desired.Normalize();
         return CalculateSteering(desired);
     }
@@ -80,6 +90,7 @@ public class BoidMovement : MonoBehaviour
     public Vector3 Evade(Vector3 hunterPosition, Vector3 hunterVelocity)
     {
         var predictedPosition = hunterPosition + hunterVelocity * _prediction;
+        predictedPosition.y = 0f;
         return Flee(predictedPosition);
     }
 
@@ -93,6 +104,7 @@ public class BoidMovement : MonoBehaviour
         }
 
         var desired = target - transform.position;
+        desired.y = 0f;
         desired.Normalize();
         desired *= _maxVelocity * (dist / _radiusArrive);
 

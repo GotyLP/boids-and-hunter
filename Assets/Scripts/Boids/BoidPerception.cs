@@ -7,7 +7,7 @@ public class BoidPerception : MonoBehaviour
     [SerializeField] float _radiusAlign;
     [SerializeField] float _radiusSeparation;
     [SerializeField] float _radiusFoodDetection;
-    [SerializeField] float _radiusTryEatFoot;
+    [SerializeField] float _radiusTryEatFood;
     [SerializeField] float _radiusHunterDetection;
 
 
@@ -116,7 +116,7 @@ public class BoidPerception : MonoBehaviour
 
         foreach (var food in allFood)
         {
-            if (Vector3.Distance(transform.position, food.transform.position) < _radiusTryEatFoot)
+            if (Vector3.Distance(transform.position, food.transform.position) < _radiusTryEatFood)
             {
                 food.gameObject.SetActive(false);
                 allFood.Remove(food);
