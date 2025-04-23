@@ -114,12 +114,12 @@ public class BoidPerception : MonoBehaviour
     {
         var allFood = GameManager.Instance.totalFood;
 
-        foreach (var food in allFood)
+        for (int i = 0; i < allFood.Count; i++)
         {
+            var food = allFood[i];
             if (Vector3.Distance(transform.position, food.transform.position) < _radiusTryEatFood)
             {
-                food.gameObject.SetActive(false);
-                allFood.Remove(food);
+                Destroy(food.gameObject);
                 break;
             }
         }

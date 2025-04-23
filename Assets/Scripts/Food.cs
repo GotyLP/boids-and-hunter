@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         GameManager.Instance.totalFood.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.totalFood.Remove(this);
     }
 }
