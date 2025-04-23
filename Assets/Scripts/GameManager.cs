@@ -18,6 +18,14 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
     }
+
+    public void RemoveBoid(Boid boid)
+    {
+        if (totalBoids.Contains(boid))
+        {
+            totalBoids.Remove(boid);
+        }
+    }
 }
 
 

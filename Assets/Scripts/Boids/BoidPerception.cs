@@ -60,6 +60,7 @@ public class BoidPerception : MonoBehaviour
 
         foreach (var boid in allBoids)
         {
+            if (boid == null) return false;
             var self = GetComponent<Boid>();
             if (boid == self) continue;
             if (Vector3.Distance(transform.position, boid.transform.position) <= _radiusAlign)
